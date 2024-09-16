@@ -1,5 +1,3 @@
-image: docker:latest
-
 stages:
   - build
   - test
@@ -8,16 +6,13 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
 
-services:
-  - docker:dind # Uses Docker-in-Docker (dind) service to enable Docker commands inside the GitLab runner
-
 build:
   stage: build
   image: docker:20.10.16
   services:
     - docker:20.10.16-dind
   script:
-    - docker-compose -f docker-compose.yml build
+    - docker-compose -f docker-compose.yml build --no-cache
   only:
     - main
 
