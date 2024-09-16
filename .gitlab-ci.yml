@@ -1,0 +1,36 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+services:
+  - docker:dind # Uses Docker-in-Docker (dind) service to enable Docker commands inside the GitLab runner
+
+build:
+  stage: build
+  script:
+    - docker-compose -f docker-compose.yml build
+  only:
+    - main
+
+test:
+  stage: test
+  script:
+    - docker-compose -f docker-compose.yml up -d
+    - docker ps | grep 'jobnestbackend-container'
+    - docker ps | grep 'jobnestfrontend-container'
+    - docker ps | grep 'postgres-container'
+    - curl http://localhost:8080/ # checks if the backend is running
+    - curl http://localhost:3000/ # checks if the frontend is running
+  only:
+    - main
+
+deploy:
+  stage: deploy
+  script:
+    - docker-compose -f docker-compose.yml up -d
+  only:
+    - main
