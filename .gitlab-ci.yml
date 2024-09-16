@@ -12,7 +12,7 @@ build:
   services:
     - docker:20.10.16-dind
   script:
-    - docker-compose -f docker-compose.yml build --no-cache
+    - docker-compose build --no-cache
   only:
     - main
 
@@ -22,7 +22,7 @@ test:
   services:
     - docker:20.10.16-dind
   script:
-    - docker-compose -f docker-compose.yml up -d
+    - docker-compose up -d
     - docker ps | grep 'jobnestbackend-container'
     - docker ps | grep 'jobnestfrontend-container'
     - docker ps | grep 'postgres-container'
@@ -38,6 +38,6 @@ deploy:
     - docker:20.10.16-dind
   script:
     - echo "Déploiement de l'application"
-    - docker-compose -f docker-compose.yml up -d
+    - docker-compose up -d
   only:
     - main
