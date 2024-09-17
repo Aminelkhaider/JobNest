@@ -8,10 +8,11 @@ variables:
 
 build:
   stage: build
-  image: docker:20.10.16
+  image: maven:3.8.1-openjdk-17
   services:
     - docker:20.10.16-dind
   script:
+    - mvn clean install -DskipTests
     - docker-compose build --no-cache
   only:
     - main
