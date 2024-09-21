@@ -8,6 +8,7 @@ variables:
 
 build_backend:
   stage: build
+  image: maven:3.8.6-openjdk-17
   script:
     - cd JobNest-backend
     - mvn clean install -DskipTests
