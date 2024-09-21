@@ -6,13 +6,22 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
 
+build_backend:
+  stage: build
+  script:
+    - cd JobNest-backend
+    - mvn clean install -DskipTests
+  artifacts:
+    paths:
+      - JobNest-backend/target/*.jar  # Store the jar file for the next stages
+
 docker-build:
   stage: build
   image: docker:20.10.16
   services:
     - docker:20.10.16-dind
   script:
-    - docker-compose -f docker-compose.yml up -d
+    - docker-compose build
   only:
     - main
 
@@ -22,6 +31,7 @@ test:
   services:
     - docker:20.10.16-dind
   script:
+    - docker-compose -f docker-compose.yml up -d
     - docker ps | grep 'jobnestbackend-container'
     - docker ps | grep 'jobnestfrontend-container'
     - docker ps | grep 'postgres-container'
