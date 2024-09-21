@@ -6,13 +6,21 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
 
-build:
+maven-build:
   stage: build
   image: maven:3.8.1-openjdk-17
+  stage: build
+  script: "mvn clean package -B"
+  artifacts:
+    paths:
+      - target/*.jar
+
+docker-build:
+  stage: build
+  image: docker:20.10.16
   services:
     - docker:20.10.16-dind
   script:
-    - mvn clean install -DskipTests
     - docker-compose build --no-cache
   only:
     - main
